@@ -2,10 +2,13 @@ package com.guilhermebertol.comandos;
 
 import com.guilhermebertol.utils.MqttMensagem;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
@@ -35,6 +38,20 @@ public class Iot implements CommandExecutor {
 
                     player.sendMessage("§bMensagem IOT enviada! "+resultado);
 
+                    return true;
+
+                }else if(args[0].equalsIgnoreCase("cria_item")){
+
+                    //CRIAÇÃO DE ITEMS
+                    ItemStack i = new ItemStack(Material.DIAMOND, 1, (short) 0); //Cria o item
+
+                    //Manipula as informações do item
+                    ItemMeta im = i.getItemMeta();
+                    im.setDisplayName("§dInformação do item");
+                    im.setLore(Arrays.asList("Item diamante"));
+                    i.setItemMeta(im);
+
+                    player.getInventory().addItem(i); //Adiciona ao inventario
                     return true;
 
                 }
