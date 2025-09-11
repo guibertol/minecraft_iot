@@ -1,0 +1,8 @@
+name: IOT_Minecraft
+main: com.guilhermebertol.Guilhermebertol
+version: 1.0.0
+author: Guilherme Bertol da Silva
+description: MOD de minecraft dedicado ao uso com IOT, no ESP32
+commands:
+  iot:
+    description: habilita funcionalidades IOT
