@@ -33,7 +33,7 @@ public class Iot implements CommandExecutor {
                     String resultado = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                        MqttMensagem.enviarMensagem(resultado);
+                        MqttMensagem.enviarMensagem(resultado, "iot/mensagem");
                     });
 
                     player.sendMessage("§bMensagem IOT enviada! "+resultado);

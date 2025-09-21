@@ -24,7 +24,7 @@ public class Guilhermebertol extends JavaPlugin{
     public void onEnable() {
 
         instance = this;
-        Bukkit.getConsoleSender().sendMessage("§e MOD IOT Minecraft inicializado");
+        Bukkit.getConsoleSender().sendMessage("§2 MOD IOT Minecraft inicializado");
         loadConfiguration();
         System.out.println(getConfig().getString("Config.ip"));
 

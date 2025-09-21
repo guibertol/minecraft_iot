@@ -32,7 +32,7 @@ public class BlocoEvento implements Listener {
         jogador.sendMessage("Bloco quebrado "+jogador.getName());
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            MqttMensagem.enviarMensagem("Bloco quebrado "+tipo);
+            MqttMensagem.enviarMensagem("Bloco quebrado "+tipo, "blocos");
         });
 
         //Adicionando efeito de poção
@@ -43,7 +43,7 @@ public class BlocoEvento implements Listener {
     @EventHandler
     public void mensagemServidor(ServerListPingEvent event){
         if(!Bukkit.hasWhitelist()){
-            event.setMotd("§cServidor IOT esta ligado, venha jogar!!!");
+            event.setMotd("§2Servidor IOT esta ligado, venha jogar!!!");
         }
     }
 

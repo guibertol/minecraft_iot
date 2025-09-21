@@ -25,7 +25,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class MqttMensagem {
 
 
-    public static void enviarMensagem(String mensagem){
+    public static void enviarMensagem(String mensagem, String topico){
 
         final String host = "91934fea2397450891cbfa6e19508917.s1.eu.hivemq.cloud";
         final String username = "administrador";
@@ -78,7 +78,7 @@ public class MqttMensagem {
          * Publish "Hello" to the topic "my/test/topic" with qos = 2.
          */
         client.publishWith()
-                .topic("my/test/topic")
+                .topic(topico)
                 .payload(UTF_8.encode(mensagem))
                 .qos(MqttQos.EXACTLY_ONCE)
                 .send();
