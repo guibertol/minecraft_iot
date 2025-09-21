@@ -3,6 +3,7 @@ package com.guilhermebertol.comandos;
 import com.guilhermebertol.utils.MqttMensagem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -35,6 +36,9 @@ public class Iot implements CommandExecutor {
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                         MqttMensagem.enviarMensagem(resultado, "iot/mensagem");
                     });
+
+                    //Som
+                    player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 10);
 
                     player.sendMessage("§bMensagem IOT enviada! "+resultado);
 
