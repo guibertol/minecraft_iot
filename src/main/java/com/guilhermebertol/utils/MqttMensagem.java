@@ -19,7 +19,14 @@ package com.guilhermebertol.utils;
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
+import java.nio.CharBuffer;
+import java.util.Collection;
+import java.util.List;
+
+import static com.hivemq.client.mqtt.MqttGlobalPublishFilter.ALL;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class MqttMensagem {
@@ -83,5 +90,54 @@ public class MqttMensagem {
                 .qos(MqttQos.EXACTLY_ONCE)
                 .send();
     }
+
+    public static void receberMensagem(String topico) {
+
+        final String host = "91934fea2397450891cbfa6e19508917.s1.eu.hivemq.cloud";
+        final String username = "administrador";
+        final String password = "yS.:0B9G5h2j";
+
+        /**
+         * Building the client with ssl.
+         */
+        final Mqtt5BlockingClient client = MqttClient.builder()
+                .useMqttVersion5()
+                .serverHost(host)
+                .serverPort(8884)
+                .sslWithDefaultConfig()
+                .webSocketConfig()
+                .serverPath("mqtt")
+                .applyWebSocketConfig()
+                .buildBlocking();
+
+        client.connectWith()
+                .simpleAuth()
+                .username(username)
+                .password(UTF_8.encode(password))
+                .applySimpleAuth()
+                .send();
+
+        System.out.println("Connected successfully");
+
+        client.subscribeWith()
+                .topicFilter(topico)
+                .qos(MqttQos.EXACTLY_ONCE)
+                .send();
+
+        client.toAsync().publishes(ALL, publish -> {
+
+            String mensagem = UTF_8.decode(publish.getPayload().get()).toString();
+            client.disconnect();
+            //System.out.println("Received message: " + publish.getTopic() + " -> " + ));
+
+            for(Player p : Bukkit.getOnlinePlayers()){
+                p.sendMessage("§d[IOT][Mensagem]"+mensagem);
+            }
+
+        });
+
+    }
+
+
 
 }

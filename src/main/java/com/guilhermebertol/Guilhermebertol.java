@@ -35,6 +35,9 @@ public class Guilhermebertol extends JavaPlugin{
 
         registrarComandos();
 
+        //Inicia o schedule
+        iniciaSchedule();
+
     }
 
     public void registrarComandos(){
@@ -55,6 +58,16 @@ public class Guilhermebertol extends JavaPlugin{
 
     public static Guilhermebertol getInstance(){
         return instance;
+    }
+
+    //Schedule
+    public void iniciaSchedule(){
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+
+            Bukkit.getConsoleSender().sendMessage("§2 MOD IOT Minecraft inicializado");
+            MqttMensagem.receberMensagem("sensor/dth11");
+
+        }, 0,20 * 25);
     }
 
 }
