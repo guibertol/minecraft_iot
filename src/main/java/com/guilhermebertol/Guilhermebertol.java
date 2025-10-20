@@ -65,7 +65,7 @@ public class Guilhermebertol extends JavaPlugin{
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
 
             Bukkit.getConsoleSender().sendMessage("§2 MOD IOT Minecraft inicializado");
-            MqttMensagem.receberMensagem("sensor/dth11");
+            MqttMensagem.receberMensagem("sensor/dht11");
 
         }, 0,20 * 25);
     }

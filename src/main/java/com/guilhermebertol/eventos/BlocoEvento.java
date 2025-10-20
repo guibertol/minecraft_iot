@@ -2,12 +2,18 @@ package com.guilhermebertol.eventos;
 
 import com.guilhermebertol.utils.MqttMensagem;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityBreakDoorEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.bukkit.material.Door;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -22,6 +28,56 @@ public class BlocoEvento implements Listener {
     }
 
     @EventHandler
+    public void abrirPorta(PlayerInteractEvent event){
+
+        if(event.getClickedBlock() == null){
+            return;
+        }
+
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK){
+            return;
+        }
+
+        //Pega o bloco clicado
+        Block block = event.getClickedBlock();
+        Material type = block.getType();
+
+        if (type == Material.WOOD_DOOR ||
+                type == Material.BIRCH_DOOR ||
+                type == Material.SPRUCE_DOOR ||
+                type == Material.JUNGLE_DOOR ||
+                type == Material.ACACIA_DOOR ||
+                type == Material.DARK_OAK_DOOR ||
+                type == Material.JUNGLE_DOOR ||
+                type == Material.TRAP_DOOR ||
+                type == Material.WOOD_DOOR) {
+            Player player = event.getPlayer();
+
+            Block bottom = block;
+            org.bukkit.material.Door doorData = (org.bukkit.material.Door) block.getState().getData();
+            if (doorData.isTopHalf()) {
+                bottom = block.getRelative(BlockFace.DOWN);
+            }
+
+            Block finalBottom = bottom;
+
+            // Espera 1 tick para garantir atualização
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                org.bukkit.material.Door door = (org.bukkit.material.Door) finalBottom.getState().getData();
+                boolean aberta = door.isOpen();
+
+                if (aberta) {
+                    MqttMensagem.enviarMensagem("1", "acao/porta"); // aberta
+                } else {
+                    MqttMensagem.enviarMensagem("0", "acao/porta"); // fechada
+                }
+            }, 1L);
+
+        }
+
+    }
+
+    /*@EventHandler
     public void quandoQuebrarBloco(BlockBreakEvent event){
 
         Player jogador = event.getPlayer();
@@ -38,7 +94,7 @@ public class BlocoEvento implements Listener {
         //Adicionando efeito de poção
         jogador.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1, true, true));
 
-    }
+    }*/
 
     @EventHandler
     public void mensagemServidor(ServerListPingEvent event){
