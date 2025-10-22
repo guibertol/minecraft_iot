@@ -38,20 +38,17 @@ public class BlocoEvento implements Listener {
             return;
         }
 
+
+        Player player = event.getPlayer();
+
         //Pega o bloco clicado
         Block block = event.getClickedBlock();
         Material type = block.getType();
 
-        if (type == Material.WOOD_DOOR ||
-                type == Material.BIRCH_DOOR ||
-                type == Material.SPRUCE_DOOR ||
-                type == Material.JUNGLE_DOOR ||
-                type == Material.ACACIA_DOOR ||
-                type == Material.DARK_OAK_DOOR ||
-                type == Material.JUNGLE_DOOR ||
-                type == Material.TRAP_DOOR ||
-                type == Material.WOOD_DOOR) {
-            Player player = event.getPlayer();
+
+        player.sendMessage(type.name());
+
+        if (type == Material.WOODEN_DOOR) {
 
             Block bottom = block;
             org.bukkit.material.Door doorData = (org.bukkit.material.Door) block.getState().getData();
@@ -70,6 +67,23 @@ public class BlocoEvento implements Listener {
                     MqttMensagem.enviarMensagem("1", "acao/porta"); // aberta
                 } else {
                     MqttMensagem.enviarMensagem("0", "acao/porta"); // fechada
+                }
+            }, 1L);
+
+        }else if(type == Material.LEVER){
+
+            Block bottom = block;
+            org.bukkit.material.Lever alavancaData = (org.bukkit.material.Lever) block.getState().getData();
+
+            // Espera 1 tick para garantir atualização
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+
+                boolean aberta = alavancaData.isPowered();
+
+                if (aberta) {
+                    MqttMensagem.enviarMensagem("1", "acao/alavanca"); // aberta
+                } else {
+                    MqttMensagem.enviarMensagem("0", "acao/alavanca"); // fechada
                 }
             }, 1L);
 

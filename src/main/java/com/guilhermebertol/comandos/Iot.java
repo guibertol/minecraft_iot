@@ -44,18 +44,29 @@ public class Iot implements CommandExecutor {
 
                     return true;
 
-                }else if(args[0].equalsIgnoreCase("cria_item")){
+                }else if(args[0].equalsIgnoreCase("comecar")){
 
                     //CRIAÇÃO DE ITEMS
-                    ItemStack i = new ItemStack(Material.DIAMOND, 1, (short) 0); //Cria o item
+                    ItemStack i = new ItemStack(Material.LEVER, 1, (short) 0); //Cria o item
 
                     //Manipula as informações do item
                     ItemMeta im = i.getItemMeta();
-                    im.setDisplayName("§dInformação do item");
-                    im.setLore(Arrays.asList("Item diamante"));
+                    im.setDisplayName("§dAlavanca IOT");
+                    im.setLore(Arrays.asList("Alavanca com MQTT"));
                     i.setItemMeta(im);
 
                     player.getInventory().addItem(i); //Adiciona ao inventario
+
+                    ItemStack porta = new ItemStack(Material.WOOD_DOOR, 1, (short) 0); //Cria o item
+                    //Manipula as informações do item
+                    ItemMeta portaInv = porta.getItemMeta();
+                    portaInv.setDisplayName("§dPorta IOT");
+                    portaInv.setLore(Arrays.asList("Porta com MQTT."));
+                    porta.setItemMeta(portaInv);
+
+                    player.getInventory().addItem(porta); //Adiciona ao inventario
+
+
                     return true;
 
                 }
