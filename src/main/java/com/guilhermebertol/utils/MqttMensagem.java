@@ -33,19 +33,18 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class MqttMensagem {
 
     public static Long tempoSalvo = -1L;
+    private static String host = "1a441860d5394eccbe038e6f1fc58a10.s1.eu.hivemq.cloud";
+    private static String username = "administrador";
+    private static String password = "yS.:0B9G5h2j";
 
     public static void enviarMensagem(String mensagem, String topico){
-
-        final String host = "1a441860d5394eccbe038e6f1fc58a10.s1.eu.hivemq.cloud";
-        final String username = "administrador";
-        final String password = "yS.:0B9G5h2j";
 
         /**
          * Building the client with ssl.
          */
         final Mqtt5BlockingClient client = MqttClient.builder()
                 .useMqttVersion5()
-                .serverHost(host)
+                .serverHost(getHost())
                 .serverPort(8884)
                 .sslWithDefaultConfig()
                 .webSocketConfig()
@@ -58,8 +57,8 @@ public class MqttMensagem {
          */
         client.connectWith()
                 .simpleAuth()
-                .username(username)
-                .password(UTF_8.encode(password))
+                .username(getUsername())
+                .password(UTF_8.encode(getPassword()))
                 .applySimpleAuth()
                 .send();
 
@@ -91,20 +90,19 @@ public class MqttMensagem {
                 .payload(UTF_8.encode(mensagem))
                 .qos(MqttQos.EXACTLY_ONCE)
                 .send();
+
+        client.disconnect();
+
     }
 
     public static void receberMensagem(String topico) {
-
-        final String host = "1a441860d5394eccbe038e6f1fc58a10.s1.eu.hivemq.cloud";
-        final String username = "administrador";
-        final String password = "yS.:0B9G5h2j";
 
         /**
          * Building the client with ssl.
          */
         final Mqtt5BlockingClient client = MqttClient.builder()
                 .useMqttVersion5()
-                .serverHost(host)
+                .serverHost(getHost())
                 .serverPort(8884)
                 .sslWithDefaultConfig()
                 .webSocketConfig()
@@ -114,8 +112,8 @@ public class MqttMensagem {
 
         client.connectWith()
                 .simpleAuth()
-                .username(username)
-                .password(UTF_8.encode(password))
+                .username(getUsername())
+                .password(UTF_8.encode(getPassword()))
                 .applySimpleAuth()
                 .send();
 
@@ -142,16 +140,12 @@ public class MqttMensagem {
 
     public static void receberMensagemDoTempo(String topico) {
 
-        final String host = "1a441860d5394eccbe038e6f1fc58a10.s1.eu.hivemq.cloud";
-        final String username = "administrador";
-        final String password = "yS.:0B9G5h2j";
-
         /**
          * Building the client with ssl.
          */
         final Mqtt5BlockingClient client = MqttClient.builder()
                 .useMqttVersion5()
-                .serverHost(host)
+                .serverHost(getHost())
                 .serverPort(8884)
                 .sslWithDefaultConfig()
                 .webSocketConfig()
@@ -161,8 +155,8 @@ public class MqttMensagem {
 
         client.connectWith()
                 .simpleAuth()
-                .username(username)
-                .password(UTF_8.encode(password))
+                .username(getUsername())
+                .password(UTF_8.encode(getPassword()))
                 .applySimpleAuth()
                 .send();
 
@@ -213,6 +207,18 @@ public class MqttMensagem {
 
         return Math.round((valor / 255.0) * 24000);
 
+    }
+
+    public static String getHost() {
+        return host;
+    }
+
+    public static String getUsername() {
+        return username;
+    }
+
+    public static String getPassword() {
+        return password;
     }
 
 }
