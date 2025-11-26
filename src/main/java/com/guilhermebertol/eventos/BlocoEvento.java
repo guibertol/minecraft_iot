@@ -46,7 +46,7 @@ public class BlocoEvento implements Listener {
         Material type = block.getType();
 
 
-        player.sendMessage(type.name());
+        //player.sendMessage(type.name());
 
         if (type == Material.WOODEN_DOOR) {
 
@@ -81,12 +81,17 @@ public class BlocoEvento implements Listener {
                 boolean aberta = alavancaData.isPowered();
 
                 if (aberta) {
-                    MqttMensagem.enviarMensagem("1", "acao/alavanca"); // aberta
+                    MqttMensagem.enviarMensagem("0", "acao/alavanca"); // aberta
                 } else {
-                    MqttMensagem.enviarMensagem("0", "acao/alavanca"); // fechada
+                    MqttMensagem.enviarMensagem("1", "acao/alavanca"); // fechada
                 }
             }, 1L);
 
+        }else if(type == Material.STONE_BUTTON){
+
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                MqttMensagem.enviarMensagem("1", "acao/botao"); // aberta
+            }, 1L);
         }
 
     }

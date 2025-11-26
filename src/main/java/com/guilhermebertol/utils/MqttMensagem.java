@@ -20,6 +20,7 @@ import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.nio.CharBuffer;
@@ -31,10 +32,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class MqttMensagem {
 
+    public static Long tempoSalvo = -1L;
 
     public static void enviarMensagem(String mensagem, String topico){
 
-        final String host = "91934fea2397450891cbfa6e19508917.s1.eu.hivemq.cloud";
+        final String host = "1a441860d5394eccbe038e6f1fc58a10.s1.eu.hivemq.cloud";
         final String username = "administrador";
         final String password = "yS.:0B9G5h2j";
 
@@ -93,7 +95,7 @@ public class MqttMensagem {
 
     public static void receberMensagem(String topico) {
 
-        final String host = "91934fea2397450891cbfa6e19508917.s1.eu.hivemq.cloud";
+        final String host = "1a441860d5394eccbe038e6f1fc58a10.s1.eu.hivemq.cloud";
         final String username = "administrador";
         final String password = "yS.:0B9G5h2j";
 
@@ -138,6 +140,79 @@ public class MqttMensagem {
 
     }
 
+    public static void receberMensagemDoTempo(String topico) {
 
+        final String host = "1a441860d5394eccbe038e6f1fc58a10.s1.eu.hivemq.cloud";
+        final String username = "administrador";
+        final String password = "yS.:0B9G5h2j";
+
+        /**
+         * Building the client with ssl.
+         */
+        final Mqtt5BlockingClient client = MqttClient.builder()
+                .useMqttVersion5()
+                .serverHost(host)
+                .serverPort(8884)
+                .sslWithDefaultConfig()
+                .webSocketConfig()
+                .serverPath("mqtt")
+                .applyWebSocketConfig()
+                .buildBlocking();
+
+        client.connectWith()
+                .simpleAuth()
+                .username(username)
+                .password(UTF_8.encode(password))
+                .applySimpleAuth()
+                .send();
+
+        System.out.println("Connected successfully");
+
+        client.subscribeWith()
+                .topicFilter(topico)
+                .qos(MqttQos.EXACTLY_ONCE)
+                .send();
+
+        client.toAsync().publishes(ALL, publish -> {
+
+            String mensagem = UTF_8.decode(publish.getPayload().get()).toString();
+            client.disconnect();
+            //System.out.println("Received message: " + publish.getTopic() + " -> " + ));
+
+            Long tempo = converter255ParaTime(Integer.parseInt(mensagem));
+
+            if(tempoSalvo != tempo) {
+
+                long diferenca = Math.abs(tempo - tempoSalvo);
+
+                // 3% de diferença do valor salvo
+                double limite = tempoSalvo * 0.03;
+
+                if (diferenca > limite) {
+
+                    World world = Bukkit.getWorlds().get(0);
+                    world.setTime(tempo);
+                    tempoSalvo = tempo;
+
+                    for(Player p : Bukkit.getOnlinePlayers()){
+                        p.sendMessage("§d[IOT][Potenciometro]"+mensagem);
+                    }
+
+                }
+
+            }
+
+        });
+
+    }
+
+    public static long converter255ParaTime(int valor) {
+
+        if (valor < 0) valor = 0;
+        if (valor > 255) valor = 255;
+
+        return Math.round((valor / 255.0) * 24000);
+
+    }
 
 }

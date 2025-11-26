@@ -18,6 +18,7 @@ import com.guilhermebertol.utils.MqttMensagem;
 public class Guilhermebertol extends JavaPlugin{
 
     private static Guilhermebertol instance;
+    private static String tempo;
     //private static MYSQL mysql;
 
     @Override
@@ -37,6 +38,7 @@ public class Guilhermebertol extends JavaPlugin{
 
         //Inicia o schedule
         iniciaSchedule();
+        iniciaScheduleTempo();
 
     }
 
@@ -68,6 +70,14 @@ public class Guilhermebertol extends JavaPlugin{
             MqttMensagem.receberMensagem("sensor/dht11");
 
         }, 0,20 * 25);
+    }
+
+    public void iniciaScheduleTempo(){
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+
+            MqttMensagem.receberMensagemDoTempo("sensor/potenciometro");
+
+        }, 0,20 * 5);
     }
 
 }
