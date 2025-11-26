@@ -28,7 +28,7 @@ public class BlocoEvento implements Listener {
     }
 
     @EventHandler
-    public void abrirPorta(PlayerInteractEvent event){
+    public void acaoItem(PlayerInteractEvent event){
 
         if(event.getClickedBlock() == null){
             return;
